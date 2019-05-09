@@ -1,0 +1,34 @@
+version: '2'
+services:
+    apache:
+        container_name: slowloris-apache
+        build:
+            context: ../..
+            dockerfile: ./docker/dev/apache/Dockerfile
+        image: httpd:2.4
+        ports:
+            - 80:80
+        volumes:
+            - ../dev/apache/httpd.conf:/usr/local/apache2/conf/httpd.conf
+        networks:
+            default:
+              aliases:
+                  - victim.localhost
+
+    atacker-1:
+        image: slowloris-atacker-1
+        container_name: slowloris-atacker-1
+        build:
+            context: ../..
+            dockerfile: ./docker/dev/atacker/Dockerfile
+        restart: 'no'
+        env_file: ./env.conf
+        volumes:
+            - ../../:/code
+        networks:
+            default:
+
+networks:
+    default:
+        driver: bridge
+
