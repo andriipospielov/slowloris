@@ -1,8 +1,6 @@
 COMPOSE_PROJECT_NAME?=slowloris
 COMPOSE_FILE?=docker/dev/docker-compose.yml
 
-all: build run
-
 run:
 	docker-compose -p ${COMPOSE_PROJECT_NAME} -f ${COMPOSE_FILE} up -d
 
@@ -30,8 +28,21 @@ show-response-time:
 logs:
 	docker-compose -p ${COMPOSE_PROJECT_NAME} -f ${COMPOSE_FILE} logs -f ${SERVICE}
 
-build:
-	docker-compose -f ${COMPOSE_FILE} build
+build-protected:
+	docker-compose -f ${COMPOSE_FILE} build apache-protected attacker
+
+build-dummy:
+	docker-compose -f ${COMPOSE_FILE} build apache-dummy attacker-1 attacker-2
+
+run-protected:
+	docker-compose -p ${COMPOSE_PROJECT_NAME} -f ${COMPOSE_FILE} up -d apache-protected
+	docker-compose -p ${COMPOSE_PROJECT_NAME} -f ${COMPOSE_FILE} up -d attacker-1
+	docker-compose -p ${COMPOSE_PROJECT_NAME} -f ${COMPOSE_FILE} up -d attacker-2
+
+run-dummy:
+	docker-compose -p ${COMPOSE_PROJECT_NAME} -f ${COMPOSE_FILE} up -d apache-dummy
+	docker-compose -p ${COMPOSE_PROJECT_NAME} -f ${COMPOSE_FILE} up -d attacker-1
+	docker-compose -p ${COMPOSE_PROJECT_NAME} -f ${COMPOSE_FILE} up -d attacker-2
 
 ps:
 	docker-compose -p ${COMPOSE_PROJECT_NAME} -f ${COMPOSE_FILE} ps

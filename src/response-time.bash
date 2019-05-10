@@ -2,7 +2,7 @@
 
 while true
 do
-    curl 'localhost'  --compressed -s -o /dev/null -w  "%{time_starttransfer}\n"
+    curl 'localhost'  --compressed -s -o /dev/null -w  "%{time_starttransfer} %{response_code}\n"
 
-sleep 5s
+sleep 2s
 done

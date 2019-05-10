@@ -1,26 +1,38 @@
 version: '2'
 services:
-    apache:
-        container_name: slowloris-apache
-        build:
-            context: ../..
-            dockerfile: ./docker/dev/apache/Dockerfile
+
+    apache-dummy:
         image: httpd:2.4
+        container_name: slowloris-apache-dummy
+        build:
+            dockerfile: ./docker/dev/apache-dummy/Dockerfile
+            context: ../..
         ports:
             - 80:80
         volumes:
-            - ../dev/apache/httpd.conf:/usr/local/apache2/conf/httpd.conf
+            - ../dev/apache/httpd-dummy.conf:/usr/local/apache2/conf/httpd-dummy.conf
         networks:
             default:
-              aliases:
-                  - victim.localhost
+                aliases:
+                    - victim.localhost
 
-    atacker-1:
-        image: slowloris-atacker-1
-        container_name: slowloris-atacker-1
+    apache-protected:
+        container_name: slowloris-apache-protected
         build:
             context: ../..
-            dockerfile: ./docker/dev/atacker/Dockerfile
+            dockerfile: ./docker/dev/apache-protected/Dockerfile
+        extends:
+            service: apache-dummy
+        volumes:
+            - ../dev/apache/httpd-protected.conf:/usr/local/apache2/conf/httpd-protected.conf
+
+    attacker:
+        image: slowloris-attacker
+        container_name: slowloris-attacker
+        entrypoint: ./docker/dev/attacker/entrypoint.sh
+        build:
+            context: ../..
+            dockerfile: ./docker/dev/attacker/Dockerfile
         restart: 'no'
         env_file: ./env.conf
         volumes:
@@ -31,4 +43,3 @@ services:
 networks:
     default:
         driver: bridge
-
